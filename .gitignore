@@ -11,6 +11,8 @@
 #tests (for now)
 /test
 
+#sqlite database 
+db.sqlite
 
 # Logs
 logs
