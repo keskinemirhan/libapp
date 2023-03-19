@@ -1,17 +1,28 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { LoginUserDto } from "./dto/login-user.dto";
 import { UsersService } from "./users.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
-  async login(loginUser: LoginUserDto) {
-    const [user] = await this.usersService.find(loginUser);
-    if (!user) {
-      throw new BadRequestException("wrong credentials");
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+  ) {}
+  login(loginUser: any) {
+    const token = this.jwtService.sign({
+      email: loginUser.email,
+      sub: loginUser.id,
+    });
+    return { access_token: token };
+  }
+  async validateUser(email: string, password: string) {
+    const [user] = await this.usersService.find({ email });
+    if (user && user.password === password) {
+      const { password, ...result } = user;
+      return result;
     }
-    return user.id;
+    return null;
   }
 
   async signup(createUserDto: CreateUserDto) {
