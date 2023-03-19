@@ -33,6 +33,10 @@ export class UsersService {
     return this.repo.find();
   }
 
+  find(user: Partial<User>) {
+    return this.repo.find({ where: user });
+  }
+
   findOne(id: number) {
     return this.repo.findOne({
       where: {
