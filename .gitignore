@@ -10,7 +10,7 @@
 
 #tests (for now)
 /test
-/src/*.spec.ts
+
 
 # Logs
 logs
