@@ -12,6 +12,7 @@ import { UsersModule } from "./users/users.module";
       type: "sqlite",
       database: "db.sqlite",
       entities: [User],
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
