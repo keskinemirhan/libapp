@@ -20,6 +20,6 @@ import { LocalStrategy } from "./local.strategy";
   ],
   controllers: [UsersController],
   providers: [UsersService, AuthService, JwtStrategy, LocalStrategy],
-  exports: [AuthService],
+  exports: [AuthService, UsersService],
 })
 export class UsersModule {}
