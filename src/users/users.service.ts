@@ -25,7 +25,7 @@ export class UsersService {
   // probably has better much better alternative method for this
   async create(createUserDto: CreateUserDto) {
     if (
-      this.repo.findOne({
+      await this.repo.findOne({
         where: {
           email: createUserDto.email,
         },
