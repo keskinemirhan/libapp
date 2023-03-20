@@ -17,7 +17,7 @@ export class Library {
   @Column()
   name: string;
 
-  @OneToOne(() => User, (user) => user.library)
+  @OneToOne(() => User, (user) => user.library, { eager: true })
   user: User;
 
   @OneToMany(() => Book, (book) => book.library)
