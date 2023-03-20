@@ -14,7 +14,7 @@ export class LibraryInterceptor implements NestInterceptor {
   constructor(private libraryService: LibraryService) {}
   async intercept(context: ExecutionContext, next: CallHandler) {
     const req = context.switchToHttp().getRequest();
-    req.library = await this.libraryService.findByUser(req.user);
+    req.user.library = await this.libraryService.findByUser(req.user);
     return next.handle();
   }
 }
