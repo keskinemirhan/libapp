@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Category } from "./category.entity";
 import { Library } from "./library.entity";
 
 @Entity()
@@ -11,4 +19,8 @@ export class Book {
 
   @ManyToOne(() => Library, (library) => library.books)
   library: Library;
+
+  @ManyToMany(() => Category)
+  @JoinTable()
+  categories: Category[];
 }

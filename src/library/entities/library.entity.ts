@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Book } from "./book.entity";
+import { Category } from "./category.entity";
 
 @Entity()
 export class Library {
@@ -21,4 +22,7 @@ export class Library {
 
   @OneToMany(() => Book, (book) => book.library)
   books: Book[];
+
+  @OneToMany(() => Category, (category) => category.library)
+  categorization: Category[];
 }
