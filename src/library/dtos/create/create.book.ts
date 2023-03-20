@@ -6,5 +6,5 @@ export class CreateBookDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  categories: [];
+  categories: string[];
 }
