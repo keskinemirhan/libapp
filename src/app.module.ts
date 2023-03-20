@@ -4,7 +4,9 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { User } from "./users/entities/user.entity";
 import { UsersModule } from "./users/users.module";
-import { LibraryModule } from './library/library.module';
+import { LibraryModule } from "./library/library.module";
+import { Library } from "./library/entities/library.entity";
+import { Book } from "./library/entities/book.entity";
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { LibraryModule } from './library/library.module';
     TypeOrmModule.forRoot({
       type: "sqlite",
       database: "db.sqlite",
-      entities: [User],
+      entities: [User, Library, Book],
       synchronize: true,
     }),
     LibraryModule,

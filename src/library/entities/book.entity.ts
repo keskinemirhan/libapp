@@ -8,6 +8,7 @@ export class Book {
 
   @Column()
   name: string;
+
   @ManyToOne(() => Library, (library) => library.books)
   library: Library;
 }
