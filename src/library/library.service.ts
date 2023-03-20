@@ -4,11 +4,13 @@ import { User } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 import { Repository } from "typeorm";
 import { CreateBookDto } from "./dtos/create/create.book";
+import { Book } from "./entities/book.entity";
 import { Library } from "./entities/library.entity";
 
 @Injectable()
 export class LibraryService {
   constructor(
+    @InjectRepository(Book) private bookRepo: Repository<Book>,
     @InjectRepository(Library) private libRepo: Repository<Library>,
     @Inject(forwardRef(() => UsersService)) private usersService: UsersService
   ) {}
@@ -17,7 +19,11 @@ export class LibraryService {
     return this.libRepo.find();
   }
 
-  createBook(createBook: CreateBookDto, user: User, library: Library) {}
+  async createBook(createBookDto: CreateBookDto, user: User, library: Library) {
+    const book = this.bookRepo.create(createBookDto);
+    book.library = library;
+    return await this.bookRepo.save(book);
+  }
 
   async create(userId: number) {
     const library = this.libRepo.create({
@@ -34,6 +40,9 @@ export class LibraryService {
     const library = this.libRepo.findOne({
       where: {
         user: currentUser,
+      },
+      relations: {
+        books: true,
       },
     });
     return library;
