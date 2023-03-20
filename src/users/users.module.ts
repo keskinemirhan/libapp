@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { UsersController } from "./users.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -7,6 +7,7 @@ import { AuthService } from "./auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
 import { LocalStrategy } from "./local.strategy";
+import { LibraryModule } from "src/library/library.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { LocalStrategy } from "./local.strategy";
         expiresIn: "600s",
       },
     }),
+    forwardRef(() => LibraryModule),
   ],
   controllers: [UsersController],
   providers: [UsersService, AuthService, JwtStrategy, LocalStrategy],

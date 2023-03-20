@@ -1,9 +1,12 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { LibraryService } from "src/library/library.service";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -11,10 +14,15 @@ import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private repo: Repository<User>,
+    @Inject(forwardRef(() => LibraryService))
+    private libraryService: LibraryService
+  ) {}
 
   //temporary methods not complete
 
+  // probably has better much better alternative method for this
   async create(createUserDto: CreateUserDto) {
     if (
       !this.repo.findOne({
@@ -26,7 +34,9 @@ export class UsersService {
       throw new BadRequestException("email already exists");
     }
     const user = this.repo.create(createUserDto);
-    return await this.repo.save(user);
+    await this.repo.save(user);
+    user.library = await this.libraryService.create(user.id);
+    return this.findOne(user.id);
   }
 
   findAll() {

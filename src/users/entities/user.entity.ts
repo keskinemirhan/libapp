@@ -21,7 +21,7 @@ export class User {
   @Column()
   email: string;
 
-  @OneToOne(() => Library, (library) => library.user)
+  @OneToOne(() => Library, (library) => library.user, { eager: true })
   @JoinColumn()
   library: Library;
 }

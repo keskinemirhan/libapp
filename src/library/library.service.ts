@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, forwardRef, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
@@ -10,7 +10,7 @@ import { Library } from "./entities/library.entity";
 export class LibraryService {
   constructor(
     @InjectRepository(Library) private libRepo: Repository<Library>,
-    private usersService: UsersService
+    @Inject(forwardRef(() => UsersService)) private usersService: UsersService
   ) {}
 
   findAll() {
