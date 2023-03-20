@@ -1,6 +1,9 @@
 .env.development
 .env.test
 
+#docs
+/documentation
+
 
 # compiled output
 /dist
