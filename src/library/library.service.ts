@@ -19,7 +19,15 @@ export class LibraryService {
 
   createBook(createBook: CreateBookDto, user: User, library: Library) {}
 
-  create(userId: number) {}
+  async create(userId: number) {
+    const library = this.libRepo.create({
+      name: "My Library",
+      user: await this.usersService.findOne(userId),
+      books: [],
+      categorization: [],
+    });
+    return await this.libRepo.save(library);
+  }
 
   async findByUser(user: Partial<User>) {
     const currentUser = await this.usersService.findOne(user.id);
