@@ -2,6 +2,7 @@ import { User } from "src/users/entities/user.entity";
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -23,6 +24,7 @@ export class Library {
   @OneToMany(() => Book, (book) => book.library)
   books: Book[];
 
-  @OneToMany(() => Category, (category) => category.library)
-  categorization: Category[];
+  @OneToOne(() => Category, (category) => category.library)
+  @JoinColumn()
+  rootCategory: Category;
 }

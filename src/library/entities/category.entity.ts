@@ -1,13 +1,15 @@
 import {
   Column,
   Entity,
-  ManyToMany,
-  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
+  Tree,
+  TreeParent,
+  TreeChildren,
 } from "typeorm";
-import { OneToMany } from "typeorm";
 import { Library } from "./library.entity";
 @Entity()
+@Tree("closure-table")
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,12 +17,14 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToMany(() => Category, (category) => category.topCategory)
-  subCategories: Category[];
+  @TreeParent()
+  parent: Category;
 
-  @ManyToOne(() => Category, (category) => category.subCategories)
-  topCategory: Category;
+  @TreeChildren()
+  children: Category[];
 
-  @ManyToOne(() => Library, (library) => library.categorization)
+  @OneToOne(() => Library, (library) => library.rootCategory, {
+    cascade: true,
+  })
   library: Library;
 }
