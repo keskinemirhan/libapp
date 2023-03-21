@@ -8,6 +8,7 @@ import {
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/users/jwt.guard";
 import { CreateBookDto } from "./dtos/create/create.book";
+import { CreateCategoryDto } from "./dtos/create/create.category";
 import { LibraryService } from "./library.service";
 
 @Controller("library")
@@ -20,9 +21,21 @@ export class LibraryController {
   }
   @Post("book")
   createBook(@Body() createBookDto: CreateBookDto, @Request() req: any) {
-    return this.libraryService.createBook(
-      createBookDto,
-      req.user,
+    return this.libraryService.createBook(createBookDto, req.user.library);
+  }
+
+  @Get("category")
+  async getCategory(@Request() req: any) {
+    return await this.libraryService.getCategories(req.user.library);
+  }
+
+  @Post("category")
+  createCategory(
+    @Body() createCategoryDto: CreateCategoryDto,
+    @Request() req: any
+  ) {
+    return this.libraryService.createCategory(
+      createCategoryDto,
       req.user.library
     );
   }
