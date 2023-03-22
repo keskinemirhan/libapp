@@ -117,12 +117,11 @@ export class LibraryService {
 
   //===================CATEGORY METHODS==================
 
-  async findCategory(id: number) {
-    return await this.catRepo.findOne({
-      where: {
-        id,
-      },
-    });
+  async getCategory(name: string, library: Library) {
+    const category = (await this.getCategoriesArray(library.rootCategory)).find(
+      (cat) => cat.name === name
+    );
+    return await this.catRepo.delete(category.id);
   }
 
   async getCategoriesTree(library: Library) {

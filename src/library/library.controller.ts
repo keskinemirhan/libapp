@@ -13,6 +13,7 @@ import { JwtAuthGuard } from "src/users/jwt.guard";
 import { CreateBookDto } from "./dtos/create/create.book";
 import { CreateCategoryDto } from "./dtos/create/create.category";
 import { UpdateBookDto } from "./dtos/update/update.book.dto";
+import { UpdateCategoryDto } from "./dtos/update/update.category.dto";
 import { LibraryService } from "./library.service";
 
 @Controller("library")
@@ -58,19 +59,40 @@ export class LibraryController {
 
   //============ /library/category ============
   @Get("category")
-  async getCategory(@Request() req: any) {
+  async getCategories(@Request() req: any) {
     return await this.libraryService.getCategoriesTree(req.user.library);
   }
 
   @Post("category")
-  createCategory(
+  async createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
     @Request() req: any
   ) {
-    return this.libraryService.createCategory(
+    return await this.libraryService.createCategory(
       createCategoryDto,
       req.user.library
     );
+  }
+
+  @Get("category/:name")
+  async getCategory(@Param("name") name: string, @Request() req: any) {
+    return this.libraryService.getCategory(name, req.user.library);
+  }
+
+  @Post("category/update")
+  async updateCategory(
+    @Body() updateCategoryDto: UpdateCategoryDto,
+    @Request() req: any
+  ) {
+    return await this.libraryService.updateCategory(
+      updateCategoryDto,
+      req.user.library
+    );
+  }
+
+  @Delete("category/:name")
+  async deleteCategory(@Param() name: string, @Request() req: any) {
+    return await this.libraryService.deleteCategory(name, req.user.library);
   }
 
   //===========================================
