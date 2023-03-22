@@ -99,6 +99,19 @@ export class LibraryService {
     });
   }
 
+  async getBook(id: number, library: Library) {
+    return await this.bookRepo.findOne({
+      where: {
+        id,
+        library,
+      },
+    });
+  }
+
+  async deleteBook(id: number, library: Library) {
+    return await this.bookRepo.delete({ id, library });
+  }
+
   //=====================================================
 
   //===================CATEGORY METHODS==================
