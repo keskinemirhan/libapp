@@ -6,6 +6,7 @@ import { Repository, TreeRepository } from "typeorm";
 import { CreateBookDto } from "./dtos/create/create.book";
 import { CreateCategoryDto } from "./dtos/create/create.category";
 import { UpdateBookDto } from "./dtos/update/update.book.dto";
+import { UpdateCategoryDto } from "./dtos/update/update.category.dto";
 import { Book } from "./entities/book.entity";
 import { Category } from "./entities/category.entity";
 import { Library } from "./entities/library.entity";
@@ -131,7 +132,7 @@ export class LibraryService {
     return categorization;
   }
 
-  async getCategoriesArray(root: Category) {
+  async getCategoriesArray(root: Category): Promise<Category[]> {
     const descendants = await this.catTreeRepo.findDescendants(root);
     descendants.shift();
     let result = [];
@@ -154,6 +155,34 @@ export class LibraryService {
         },
       });
     return await this.catRepo.save(category);
+  }
+
+  async updateCategory(updateCategoryDto: UpdateCategoryDto, library: Library) {
+    const category = (await this.getCategoriesArray(library.rootCategory)).find(
+      (cat) => cat.id === updateCategoryDto.id
+    );
+    const topCategory = updateCategoryDto.topCategory;
+    if (topCategory) {
+      if (topCategory === "") {
+        category.parent = library.rootCategory;
+      } else {
+        category.parent = await this.catRepo.findOne({
+          where: { name: topCategory },
+        });
+      }
+    }
+    const name = updateCategoryDto.name;
+    if (name) {
+      category.name = name;
+    }
+    return await this.catRepo.save(category);
+  }
+
+  async deleteCategory(name: string, library: Library) {
+    const categorie = (
+      await this.getCategoriesArray(library.rootCategory)
+    ).find((cat) => cat.name === name);
+    return await this.catRepo.delete({ name: categorie.name });
   }
 
   //=====================================================
