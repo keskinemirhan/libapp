@@ -6,6 +6,8 @@ import {
   Post,
   Body,
   Patch,
+  Delete,
+  Param,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/users/jwt.guard";
 import { CreateBookDto } from "./dtos/create/create.book";
@@ -17,10 +19,15 @@ import { LibraryService } from "./library.service";
 @UseGuards(JwtAuthGuard)
 export class LibraryController {
   constructor(private libraryService: LibraryService) {}
+
+  //========== /library =======================
+
   @Get()
   getLibrary(@Request() request: any) {
     return request.user.library;
   }
+
+  //========== /library/book ==================
 
   @Get("book")
   async getBooks(@Request() req: any) {
@@ -28,15 +35,28 @@ export class LibraryController {
     return this.libraryService.getBooks(library);
   }
 
+  @Get("book/:id")
+  getBook(@Param("id") id: number, @Request() req: any) {
+    return this.libraryService.getBook(id, req.user.library);
+  }
+
   @Patch("book")
   updateBook(@Body() updateBookDto: UpdateBookDto, @Request() req: any) {
     return this.libraryService.updateBook(updateBookDto, req.user.library);
   }
+
   @Post("book")
   createBook(@Body() createBookDto: CreateBookDto, @Request() req: any) {
     return this.libraryService.createBook(createBookDto, req.user.library);
   }
 
+  @Delete("book/:id")
+  async deleteBook(@Param("id") id: number, @Request() req: any) {
+    return await this.libraryService.deleteBook(id, req.user.library);
+  }
+  //===========================================
+
+  //============ /library/category ============
   @Get("category")
   async getCategory(@Request() req: any) {
     return await this.libraryService.getCategoriesTree(req.user.library);
@@ -52,4 +72,6 @@ export class LibraryController {
       req.user.library
     );
   }
+
+  //===========================================
 }
