@@ -20,7 +20,7 @@ export class Book {
   @ManyToOne(() => Library, (library) => library.books)
   library: Library;
 
-  @ManyToMany(() => Category)
+  @ManyToMany(() => Category, (cat) => cat.books)
   @JoinTable()
   categories: Category[];
 }

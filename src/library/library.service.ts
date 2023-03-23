@@ -86,7 +86,7 @@ export class LibraryService {
 
     book.categories = categories;
     book.name = updateBookDto.bookName;
-    return this.bookRepo.save(book);
+    return await this.bookRepo.save(book);
   }
 
   async getBooks(library: Library) {
@@ -121,7 +121,7 @@ export class LibraryService {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
       (cat) => cat.name === name
     );
-    return await this.catRepo.delete(category.id);
+    return await this.catRepo.findOne({ where: { id: category.id } });
   }
 
   async getCategoriesTree(library: Library) {
@@ -181,7 +181,7 @@ export class LibraryService {
     const categorie = (
       await this.getCategoriesArray(library.rootCategory)
     ).find((cat) => cat.name === name);
-    return await this.catRepo.delete({ name: categorie.name });
+    return await this.catRepo.remove(categorie);
   }
 
   //=====================================================

@@ -6,7 +6,9 @@ import {
   Tree,
   TreeParent,
   TreeChildren,
+  ManyToMany,
 } from "typeorm";
+import { Book } from "./book.entity";
 import { Library } from "./library.entity";
 @Entity()
 @Tree("closure-table")
@@ -27,4 +29,7 @@ export class Category {
     cascade: true,
   })
   library: Library;
+
+  @ManyToMany(() => Book, (book) => book.categories)
+  books: Book[];
 }

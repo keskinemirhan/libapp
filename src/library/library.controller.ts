@@ -91,7 +91,7 @@ export class LibraryController {
   }
 
   @Delete("category/:name")
-  async deleteCategory(@Param() name: string, @Request() req: any) {
+  async deleteCategory(@Param("name") name: string, @Request() req: any) {
     return await this.libraryService.deleteCategory(name, req.user.library);
   }
 
