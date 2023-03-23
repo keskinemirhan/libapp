@@ -75,17 +75,21 @@ export class LibraryService {
         id: updateBookDto.bookId,
       },
     });
-    const categories = [];
+    if (updateBookDto.categories) {
+      const categories = [];
 
-    for (let i = 0; i < updateBookDto.categories.length; i++) {
-      const category = await (
-        await this.getCategoriesArray(library.rootCategory)
-      ).find((cat) => cat.name === updateBookDto.categories[i]);
-      categories.push(category);
+      for (let i = 0; i < updateBookDto.categories.length; i++) {
+        const category = await (
+          await this.getCategoriesArray(library.rootCategory)
+        ).find((cat) => cat.name === updateBookDto.categories[i]);
+        categories.push(category);
+      }
+      book.categories = categories;
     }
 
-    book.categories = categories;
-    book.name = updateBookDto.bookName;
+    if (book.name) {
+      book.name = updateBookDto.bookName;
+    }
     return await this.bookRepo.save(book);
   }
 
