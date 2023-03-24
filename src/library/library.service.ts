@@ -64,7 +64,19 @@ export class LibraryService {
   //===================BOOK METHODS======================
 
   async createBook(createBookDto: CreateBookDto, library: Library) {
-    const book = this.bookRepo.create(createBookDto);
+    const book = this.bookRepo.create({
+      name: createBookDto.name,
+      categories: [],
+    });
+    for (const cat of createBookDto.categories) {
+      const category = await this.catRepo.findOne({
+        where: {
+          name: cat,
+        },
+      });
+
+      book.categories.push(category);
+    }
     book.library = library;
     return await this.bookRepo.save(book);
   }
