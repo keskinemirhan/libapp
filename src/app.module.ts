@@ -8,7 +8,6 @@ import { LibraryModule } from "./library/library.module";
 import { Library } from "./library/entities/library.entity";
 import { Book } from "./library/entities/book.entity";
 import { Category } from "./library/entities/category.entity";
-import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -20,7 +19,6 @@ import { FileModule } from './file/file.module';
       synchronize: true,
     }),
     LibraryModule,
-    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
