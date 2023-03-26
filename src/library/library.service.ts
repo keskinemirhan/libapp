@@ -197,7 +197,8 @@ export class LibraryService {
   async deleteCategory(id: number, library: Library) {
     const categorie = (
       await this.getCategoriesArray(library.rootCategory)
-    ).find((cat) => cat.id === id);
+    ).find((cat) => cat.id == id);
+
     return await this.catRepo.remove(categorie);
   }
 
