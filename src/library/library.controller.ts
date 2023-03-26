@@ -60,7 +60,9 @@ export class LibraryController {
   //============ /library/category ============
   @Get("category")
   async getCategories(@Request() req: any) {
-    return await this.libraryService.getCategoriesTree(req.user.library);
+    return await this.libraryService.getCategoriesArray(
+      req.user.library.rootCategory
+    );
   }
 
   @Post("category")

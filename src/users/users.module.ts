@@ -15,7 +15,7 @@ import { LibraryModule } from "src/library/library.module";
     JwtModule.register({
       secret: "secret",
       signOptions: {
-        expiresIn: "600s",
+        expiresIn: "60000s",
       },
     }),
     forwardRef(() => LibraryModule),
