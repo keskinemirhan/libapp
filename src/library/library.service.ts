@@ -194,10 +194,10 @@ export class LibraryService {
     return await this.catRepo.save(category);
   }
 
-  async deleteCategory(name: string, library: Library) {
+  async deleteCategory(id: number, library: Library) {
     const categorie = (
       await this.getCategoriesArray(library.rootCategory)
-    ).find((cat) => cat.name === name);
+    ).find((cat) => cat.id === id);
     return await this.catRepo.remove(categorie);
   }
 
