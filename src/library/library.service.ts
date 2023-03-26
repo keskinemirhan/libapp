@@ -134,9 +134,9 @@ export class LibraryService {
 
   //===================CATEGORY METHODS==================
 
-  async getCategory(name: string, library: Library) {
+  async getCategory(id: number, library: Library) {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
-      (cat) => cat.name === name
+      (cat) => cat.id === id
     );
     return await this.catRepo.findOne({ where: { id: category.id } });
   }
