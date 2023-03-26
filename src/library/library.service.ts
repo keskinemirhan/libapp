@@ -45,9 +45,10 @@ export class LibraryService {
     return await library;
   }
 
-  async findByUser(user: Partial<User>) {
-    const currentUser = await this.usersService.findOne(user.id);
-    const library = this.libRepo.findOne({
+  async findByUser(user: any) {
+    const currentUser = await this.usersService.findOne(user.userId);
+    console.log(user.id);
+    const library = await this.libRepo.findOne({
       where: {
         user: currentUser,
       },
