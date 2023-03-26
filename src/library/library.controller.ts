@@ -76,9 +76,9 @@ export class LibraryController {
     );
   }
 
-  @Get("category/:name")
-  async getCategory(@Param("name") name: string, @Request() req: any) {
-    return this.libraryService.getCategory(name, req.user.library);
+  @Get("category/:id")
+  async getCategory(@Param("id") id: number, @Request() req: any) {
+    return this.libraryService.getCategory(id, req.user.library);
   }
 
   @Post("category/update")
