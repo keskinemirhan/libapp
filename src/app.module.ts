@@ -8,6 +8,7 @@ import { LibraryModule } from "./library/library.module";
 import { Library } from "./library/entities/library.entity";
 import { Book } from "./library/entities/book.entity";
 import { Category } from "./library/entities/category.entity";
+import { Note } from "./library/entities/note.entity";
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { Category } from "./library/entities/category.entity";
     TypeOrmModule.forRoot({
       type: "sqlite",
       database: "db.sqlite",
-      entities: [User, Library, Book, Category],
+      entities: [User, Library, Book, Category, Note],
       synchronize: true,
     }),
     LibraryModule,

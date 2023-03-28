@@ -8,10 +8,11 @@ import { Category } from "./entities/category.entity";
 import { UsersModule } from "src/users/users.module";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { LibraryInterceptor } from "./interceptors/library.interceptor";
+import { Note } from "./entities/note.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Library, Book, Category]),
+    TypeOrmModule.forFeature([Library, Book, Category, Note]),
     forwardRef(() => UsersModule),
   ],
   providers: [
