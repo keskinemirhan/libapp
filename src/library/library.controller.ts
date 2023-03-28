@@ -8,12 +8,15 @@ import {
   Patch,
   Delete,
   Param,
+  Req,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/users/jwt.guard";
 import { CreateBookDto } from "./dtos/create/create.book";
 import { CreateCategoryDto } from "./dtos/create/create.category";
+import { CreateNoteDto } from "./dtos/create/create.note.dto";
 import { UpdateBookDto } from "./dtos/update/update.book.dto";
 import { UpdateCategoryDto } from "./dtos/update/update.category.dto";
+import { UpdateNoteDto } from "./dtos/update/update.note.dto";
 import { LibraryService } from "./library.service";
 
 @Controller("library")
@@ -98,4 +101,37 @@ export class LibraryController {
   }
 
   //===========================================
+
+  //================ /library/notes ===========
+
+  @Get("notes")
+  async findAllNotes(@Request() req: any) {
+    return await this.libraryService.findAllNote(req.user.library);
+  }
+
+  @Get("notes/:id")
+  async findNotesByBook(@Request() req: any, @Param("id") id: number) {
+    return await this.libraryService.findNotesByBook(id, req.user.library);
+  }
+
+  @Post("notes")
+  async createNote(@Body() createNoteDto: CreateNoteDto, @Req() req: any) {
+    return await this.libraryService.createNote(
+      createNoteDto,
+      req.user.library
+    );
+  }
+
+  @Patch("notes")
+  async updateNote(@Body() updateNoteDto: UpdateNoteDto, @Req() req: any) {
+    return await this.libraryService.updateNote(
+      updateNoteDto,
+      req.user.library
+    );
+  }
+
+  @Delete("notes/:id")
+  async deleteNote(@Param("id") id: number, @Req() req: any) {
+    return await this.libraryService.deleteNote(id, req.user.library);
+  }
 }
