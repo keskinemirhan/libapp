@@ -16,7 +16,7 @@ export class Note {
   note: string;
 
   @ManyToOne(() => Book, (book) => book.notes)
-  book: Book[];
+  book: Book;
 
   @CreateDateColumn()
   created: Date;
