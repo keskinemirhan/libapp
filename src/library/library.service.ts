@@ -5,11 +5,14 @@ import { UsersService } from "src/users/users.service";
 import { Repository, TreeRepository } from "typeorm";
 import { CreateBookDto } from "./dtos/create/create.book";
 import { CreateCategoryDto } from "./dtos/create/create.category";
+import { CreateNoteDto } from "./dtos/create/create.note.dto";
 import { UpdateBookDto } from "./dtos/update/update.book.dto";
 import { UpdateCategoryDto } from "./dtos/update/update.category.dto";
+import { UpdateNoteDto } from "./dtos/update/update.note.dto";
 import { Book } from "./entities/book.entity";
 import { Category } from "./entities/category.entity";
 import { Library } from "./entities/library.entity";
+import { Note } from "./entities/note.entity";
 
 @Injectable()
 export class LibraryService {
@@ -18,6 +21,7 @@ export class LibraryService {
     @InjectRepository(Book) private bookRepo: Repository<Book>,
     @InjectRepository(Category) private catTreeRepo: TreeRepository<Category>,
     @InjectRepository(Library) private libRepo: Repository<Library>,
+    @InjectRepository(Note) private noteRepo: Repository<Note>,
     @Inject(forwardRef(() => UsersService)) private usersService: UsersService
   ) {}
 
@@ -200,6 +204,56 @@ export class LibraryService {
     ).find((cat) => cat.id == id);
 
     return await this.catRepo.remove(categorie);
+  }
+
+  //=====================================================
+
+  //===================== NOTE METHODS ==================
+
+  async findAllNote(library: Library) {
+    return await this.noteRepo.find({ where: { library } });
+  }
+
+  async addNote(createNoteDto: CreateNoteDto, library: Library) {
+    const book = await this.bookRepo.findOne({
+      where: {
+        id: createNoteDto.bookId,
+      },
+    });
+    const note = this.noteRepo.create(createNoteDto);
+    note.library = library;
+    note.book = book;
+    return await this.noteRepo.save(note);
+  }
+
+  async findNoteByBook(id: number, library: Library) {
+    const book = await this.bookRepo.findOne({
+      where: {
+        id,
+      },
+    });
+    return await this.noteRepo.findOne({
+      where: {
+        library,
+        book,
+      },
+    });
+  }
+
+  async deleteNote(id: number, library: Library) {
+    const note = await this.noteRepo.findOne({ where: { id, library } });
+    return await this.noteRepo.delete(note);
+  }
+
+  async updateNote(updateNoteDto: UpdateNoteDto, library: Library) {
+    const note = await this.noteRepo.findOne({
+      where: {
+        id: updateNoteDto.id,
+      },
+    });
+    if (updateNoteDto.title) note.title = updateNoteDto.title;
+    if (updateNoteDto.note) note.note = updateNoteDto.note;
+    return await this.noteRepo.save(note);
   }
 
   //=====================================================
