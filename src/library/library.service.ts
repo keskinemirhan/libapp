@@ -214,7 +214,7 @@ export class LibraryService {
     return await this.noteRepo.find({ where: { library } });
   }
 
-  async addNote(createNoteDto: CreateNoteDto, library: Library) {
+  async createNote(createNoteDto: CreateNoteDto, library: Library) {
     const book = await this.bookRepo.findOne({
       where: {
         id: createNoteDto.bookId,
@@ -226,13 +226,13 @@ export class LibraryService {
     return await this.noteRepo.save(note);
   }
 
-  async findNoteByBook(id: number, library: Library) {
+  async findNotesByBook(id: number, library: Library) {
     const book = await this.bookRepo.findOne({
       where: {
         id,
       },
     });
-    return await this.noteRepo.findOne({
+    return await this.noteRepo.find({
       where: {
         library,
         book,
