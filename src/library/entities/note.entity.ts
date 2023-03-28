@@ -3,12 +3,16 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Book } from "./book.entity";
 
 @Entity()
 export class Note {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   title: string;
 
