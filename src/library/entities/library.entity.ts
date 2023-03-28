@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Book } from "./book.entity";
 import { Category } from "./category.entity";
+import { Note } from "./note.entity";
 
 @Entity()
 export class Library {
@@ -27,4 +28,7 @@ export class Library {
   @OneToOne(() => Category, (category) => category.library)
   @JoinColumn()
   rootCategory: Category;
+
+  @OneToMany(() => Note, (note) => note.library)
+  notes: Note[];
 }

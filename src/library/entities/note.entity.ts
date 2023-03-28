@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Book } from "./book.entity";
+import { Library } from "./library.entity";
 
 @Entity()
 export class Note {
@@ -21,6 +22,9 @@ export class Note {
 
   @ManyToOne(() => Book, (book) => book.notes)
   book: Book;
+
+  @ManyToOne(() => Library, (library) => library.notes)
+  library: Library;
 
   @CreateDateColumn()
   created: Date;
