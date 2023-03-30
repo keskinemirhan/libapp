@@ -211,7 +211,12 @@ export class LibraryService {
   //===================== NOTE METHODS ==================
 
   async findAllNote(library: Library) {
-    return await this.noteRepo.find({ where: { library } });
+    return await this.noteRepo.find({
+      where: { library },
+      relations: {
+        book: true,
+      },
+    });
   }
 
   async createNote(createNoteDto: CreateNoteDto, library: Library) {
