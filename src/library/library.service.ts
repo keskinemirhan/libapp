@@ -242,7 +242,7 @@ export class LibraryService {
 
   async deleteNote(id: number, library: Library) {
     const note = await this.noteRepo.findOne({ where: { id, library } });
-    return await this.noteRepo.delete(note);
+    return await this.noteRepo.remove(note);
   }
 
   async updateNote(updateNoteDto: UpdateNoteDto, library: Library) {
@@ -254,6 +254,15 @@ export class LibraryService {
     if (updateNoteDto.title) note.title = updateNoteDto.title;
     if (updateNoteDto.note) note.note = updateNoteDto.note;
     return await this.noteRepo.save(note);
+  }
+
+  async findNote(id: number, library: Library) {
+    return await this.noteRepo.findOne({
+      where: {
+        id,
+        library,
+      },
+    });
   }
 
   //=====================================================
