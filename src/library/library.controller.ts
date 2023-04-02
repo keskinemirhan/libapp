@@ -73,6 +73,10 @@ export class LibraryController {
     );
   }
 
+  @Get("category/main")
+  async getMainCategoriesArray(@Request() req: any) {
+    return await this.libraryService.getMainCategoriesArray(req.user.library);
+  }
   @Post("category")
   async createCategory(
     @Body() createCategoryDto: CreateCategoryDto,

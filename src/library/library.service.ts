@@ -192,6 +192,12 @@ export class LibraryService {
     return result;
   }
 
+  async getMainCategoriesArray(library: Library) {
+    return await this.catTreeRepo.findDescendantsTree(library.rootCategory, {
+      depth: 1,
+    });
+  }
+
   async createCategory(createCategoryDto: CreateCategoryDto, library: Library) {
     const category = this.catRepo.create({ name: createCategoryDto.name });
     if (createCategoryDto.topCategory === 0) {
