@@ -166,6 +166,7 @@ export class LibraryService {
       where: { id: category.id },
       relations: {
         children: true,
+        parent: true,
       },
     });
   }
@@ -178,7 +179,9 @@ export class LibraryService {
   }
 
   async getCategoriesArray(root: Category): Promise<Category[]> {
-    const descendants = await this.catTreeRepo.findDescendants(root);
+    const descendants = await this.catTreeRepo.findDescendants(root, {
+      relations: ["parent"],
+    });
     descendants.shift();
     let result = [];
     if (descendants.length > 0) {
@@ -191,12 +194,12 @@ export class LibraryService {
 
   async createCategory(createCategoryDto: CreateCategoryDto, library: Library) {
     const category = this.catRepo.create({ name: createCategoryDto.name });
-    if (createCategoryDto.topCategory === "") {
+    if (createCategoryDto.topCategory === 0) {
       category.parent = library.rootCategory;
     } else
       category.parent = await this.catRepo.findOne({
         where: {
-          name: createCategoryDto.topCategory,
+          id: createCategoryDto.topCategory,
         },
       });
     return await this.catRepo.save(category);
@@ -204,15 +207,15 @@ export class LibraryService {
 
   async updateCategory(updateCategoryDto: UpdateCategoryDto, library: Library) {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
-      (cat) => cat.id === updateCategoryDto.id
+      (cat) => cat.id == updateCategoryDto.id
     );
     const topCategory = updateCategoryDto.topCategory;
     if (topCategory) {
-      if (topCategory === "") {
+      if (topCategory === 0) {
         category.parent = library.rootCategory;
       } else {
         category.parent = await this.catRepo.findOne({
-          where: { name: topCategory },
+          where: { id: topCategory },
         });
       }
     }
@@ -220,7 +223,12 @@ export class LibraryService {
     if (name) {
       category.name = name;
     }
-    return await this.catRepo.save(category);
+    const savedCat = await this.catRepo.save(category);
+    return await this.catRepo.findOne({
+      where: {
+        id: savedCat.id,
+      },
+    });
   }
 
   async deleteCategory(id: number, library: Library) {

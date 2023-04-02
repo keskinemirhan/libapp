@@ -8,7 +8,7 @@ export class UpdateCategoryDto {
   @IsOptional()
   name?: string;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  topCategory?: string;
+  topCategory?: number;
 }
