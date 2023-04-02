@@ -10,5 +10,5 @@ export class UpdateBookDto {
 
   @IsArray()
   @IsOptional()
-  categories?: string[];
+  categories?: number[];
 }

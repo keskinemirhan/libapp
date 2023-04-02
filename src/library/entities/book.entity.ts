@@ -25,7 +25,7 @@ export class Book {
   @OneToMany(() => Note, (note) => note.book)
   notes: Note[];
 
-  @ManyToMany(() => Category, (cat) => cat.books, { eager: true })
+  @ManyToMany(() => Category, (cat) => cat.books)
   @JoinTable()
   categories: Category[];
 }

@@ -76,14 +76,22 @@ export class LibraryService {
     for (const cat of createBookDto.categories) {
       const category = await this.catRepo.findOne({
         where: {
-          name: cat,
+          id: cat,
         },
       });
 
       book.categories.push(category);
     }
     book.library = library;
-    return await this.bookRepo.save(book);
+    const savedBook = await this.bookRepo.save(book);
+    return this.bookRepo.findOne({
+      where: {
+        id: savedBook.id,
+      },
+      relations: {
+        categories: true,
+      },
+    });
   }
 
   async updateBook(updateBookDto: UpdateBookDto, library: Library) {
@@ -98,7 +106,7 @@ export class LibraryService {
       for (let i = 0; i < updateBookDto.categories.length; i++) {
         const category = await (
           await this.getCategoriesArray(library.rootCategory)
-        ).find((cat) => cat.name === updateBookDto.categories[i]);
+        ).find((cat) => cat.id === updateBookDto.categories[i]);
         categories.push(category);
       }
       book.categories = categories;
@@ -127,11 +135,23 @@ export class LibraryService {
         id,
         library,
       },
+      relations: {
+        categories: true,
+      },
     });
   }
 
   async deleteBook(id: number, library: Library) {
-    return await this.bookRepo.delete({ id, library });
+    const deleted = await this.bookRepo.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        categories: true,
+      },
+    });
+    await this.bookRepo.delete({ id, library });
+    return deleted;
   }
 
   //=====================================================
@@ -140,9 +160,14 @@ export class LibraryService {
 
   async getCategory(id: number, library: Library) {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
-      (cat) => cat.id === id
+      (cat) => cat.id == id
     );
-    return await this.catRepo.findOne({ where: { id: category.id } });
+    return await this.catRepo.findOne({
+      where: { id: category.id },
+      relations: {
+        children: true,
+      },
+    });
   }
 
   async getCategoriesTree(library: Library) {

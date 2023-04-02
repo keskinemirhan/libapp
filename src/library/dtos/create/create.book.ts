@@ -6,5 +6,5 @@ export class CreateBookDto {
   name: string;
 
   @IsArray()
-  categories: string[];
+  categories: number[];
 }
