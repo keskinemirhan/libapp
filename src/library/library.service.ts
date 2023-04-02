@@ -267,7 +267,15 @@ export class LibraryService {
     const note = this.noteRepo.create(createNoteDto);
     note.library = library;
     note.book = book;
-    return await this.noteRepo.save(note);
+    const savedNote = await this.noteRepo.save(note);
+    return this.noteRepo.findOne({
+      where: {
+        id: savedNote.id,
+      },
+      relations: {
+        book: true,
+      },
+    });
   }
 
   async findNotesByBook(id: number, library: Library) {
@@ -285,8 +293,14 @@ export class LibraryService {
   }
 
   async deleteNote(id: number, library: Library) {
-    const note = await this.noteRepo.findOne({ where: { id, library } });
-    return await this.noteRepo.remove(note);
+    const note = await this.noteRepo.findOne({
+      where: { id, library },
+      relations: {
+        book: true,
+      },
+    });
+    await this.noteRepo.remove(note);
+    return note;
   }
 
   async updateNote(updateNoteDto: UpdateNoteDto, library: Library) {
@@ -297,7 +311,16 @@ export class LibraryService {
     });
     if (updateNoteDto.title) note.title = updateNoteDto.title;
     if (updateNoteDto.note) note.note = updateNoteDto.note;
-    return await this.noteRepo.save(note);
+    const savedNote = await this.noteRepo.save(note);
+
+    return this.noteRepo.findOne({
+      where: {
+        id: savedNote.id,
+      },
+      relations: {
+        book: true,
+      },
+    });
   }
 
   async findNote(id: number, library: Library) {
@@ -305,6 +328,9 @@ export class LibraryService {
       where: {
         id,
         library,
+      },
+      relations: {
+        book: true,
       },
     });
   }
