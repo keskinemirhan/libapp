@@ -89,7 +89,7 @@ export class LibraryController {
     return this.libraryService.getCategory(id, req.user.library);
   }
 
-  @Post("category/update")
+  @Patch("category")
   async updateCategory(
     @Body() updateCategoryDto: UpdateCategoryDto,
     @Request() req: any
