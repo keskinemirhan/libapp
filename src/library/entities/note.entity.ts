@@ -20,7 +20,9 @@ export class Note {
   @Column()
   note: string;
 
-  @ManyToOne(() => Book, (book) => book.notes)
+  @ManyToOne(() => Book, (book) => book.notes, {
+    createForeignKeyConstraints: false,
+  })
   book: Book;
 
   @ManyToOne(() => Library, (library) => library.notes)

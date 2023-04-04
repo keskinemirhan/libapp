@@ -150,13 +150,19 @@ export class LibraryService {
         categories: true,
       },
     });
-    await this.bookRepo.delete({ id, library });
+    const notes = await this.noteRepo.find({
+      where: {
+        book: deleted,
+      },
+    });
+    notes.forEach(async (note) => await this.noteRepo.remove(note));
+    await this.bookRepo.remove(deleted);
     return deleted;
   }
 
   //=====================================================
 
-  //===================CATEGORY METHODS==================
+  //=================== CATEGORY METHODS ================
 
   async getCategory(id: number, library: Library) {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
