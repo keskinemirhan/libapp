@@ -8,6 +8,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
 import { LocalStrategy } from "./local.strategy";
 import { LibraryModule } from "src/library/library.module";
+import { APP_FILTER } from "@nestjs/core";
+import { UserExceptionFilter } from "./exceptions/users-exception.filter";
 
 @Module({
   imports: [
@@ -21,7 +23,13 @@ import { LibraryModule } from "src/library/library.module";
     forwardRef(() => LibraryModule),
   ],
   controllers: [UsersController],
-  providers: [UsersService, AuthService, JwtStrategy, LocalStrategy],
+  providers: [
+    UsersService,
+    AuthService,
+    JwtStrategy,
+    LocalStrategy,
+    { provide: APP_FILTER, useClass: UserExceptionFilter },
+  ],
   exports: [AuthService, UsersService],
 })
 export class UsersModule {}

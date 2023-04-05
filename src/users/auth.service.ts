@@ -2,6 +2,10 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
+import {
+  UserException,
+  UserExceptionCodes,
+} from "./exceptions/user.exceptions";
 
 @Injectable()
 export class AuthService {
@@ -27,10 +31,10 @@ export class AuthService {
 
   async signup(createUserDto: CreateUserDto) {
     if (await this.usersService.find({ email: createUserDto.email })) {
-      throw new BadRequestException("this email already exists");
+      throw new UserException(UserExceptionCodes.EMAIL_IN_USE);
     }
     if (await this.usersService.find({ username: createUserDto.username })) {
-      throw new BadRequestException("this username already exists");
+      throw new UserException(UserExceptionCodes.USERNAME_IN_USE);
     }
     const user = await this.usersService.create(createUserDto);
     return user.id;

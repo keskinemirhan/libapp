@@ -11,6 +11,10 @@ import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./entities/user.entity";
+import {
+  UserException,
+  UserExceptionCodes,
+} from "./exceptions/user.exceptions";
 
 @Injectable()
 export class UsersService {
@@ -31,7 +35,16 @@ export class UsersService {
         },
       })
     ) {
-      throw new BadRequestException("email already exists");
+      throw new UserException(UserExceptionCodes.EMAIL_IN_USE);
+    }
+    if (
+      await this.repo.findOne({
+        where: {
+          username: createUserDto.username,
+        },
+      })
+    ) {
+      throw new UserException(UserExceptionCodes.USERNAME_IN_USE);
     }
 
     const user = this.repo.create(createUserDto);
@@ -48,12 +61,14 @@ export class UsersService {
     return this.repo.find({ where: user });
   }
 
-  findOne(id: number) {
-    return this.repo.findOne({
+  async findOne(id: number) {
+    const user = await this.repo.findOne({
       where: {
         id,
       },
     });
+    if (!user) throw new UserException(UserExceptionCodes.USER_NOT_FOUND);
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -63,7 +78,7 @@ export class UsersService {
       },
     });
     if (!user) {
-      throw new NotFoundException("non existing user");
+      throw new UserException(UserExceptionCodes.USER_NOT_FOUND);
     }
     Object.assign(user, updateUserDto);
     return this.repo.save(user);
@@ -76,7 +91,7 @@ export class UsersService {
       },
     });
     if (!user) {
-      throw new NotFoundException("user not found");
+      throw new UserException(UserExceptionCodes.USER_NOT_FOUND);
     }
     return this.repo.remove(user);
   }

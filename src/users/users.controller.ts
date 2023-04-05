@@ -15,6 +15,10 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { JwtAuthGuard } from "./jwt.guard";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "@nestjs/passport";
+import {
+  UserException,
+  UserExceptionCodes,
+} from "./exceptions/user.exceptions";
 
 @Controller("users")
 export class UsersController {
@@ -58,5 +62,10 @@ export class UsersController {
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Get("error/error")
+  exceptionTest() {
+    throw new UserException(UserExceptionCodes.EMAIL_IN_USE);
   }
 }
