@@ -18,6 +18,10 @@ import { UpdateBookDto } from "./dtos/update/update.book.dto";
 import { UpdateCategoryDto } from "./dtos/update/update.category.dto";
 import { UpdateNoteDto } from "./dtos/update/update.note.dto";
 import { LibraryService } from "./library.service";
+import {
+  LibraryException,
+  LibraryExceptionCodes,
+} from "./exceptions/library.exceptions";
 
 @Controller("library")
 @UseGuards(JwtAuthGuard)

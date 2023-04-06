@@ -32,6 +32,10 @@ export class LibraryException extends HttpException {
         message = "internal library error";
         break;
 
+      case LibraryExceptionCodes.TOP_CATEGORY_NOT_FOUND:
+        httpStatus = HttpStatus.NOT_FOUND;
+        message = "Top category not found";
+        break;
       case LibraryExceptionCodes.EMPTY:
         httpStatus = HttpStatus.GONE;
         message = "";
@@ -49,6 +53,7 @@ export enum LibraryExceptionCodes {
   BOOK_NOT_FOUND = 2101,
   //categories
   CATEGORY_NOT_FOUND = 2201,
+  TOP_CATEGORY_NOT_FOUND = 2202,
   //notes
   NOTE_NOT_FOUND = 2301,
   //library

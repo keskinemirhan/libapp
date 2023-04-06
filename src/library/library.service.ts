@@ -35,6 +35,7 @@ export class LibraryService {
     return this.libRepo.find();
   }
 
+  //Used inside of service not dedicated to a route handler
   async createLibrary(userId: number) {
     const defaultLibrary: Partial<Library> = {
       name: "My Library",
@@ -46,13 +47,12 @@ export class LibraryService {
     const categorization = this.catRepo.create({
       name: "root",
     });
-    console.log(categorization);
     await this.catRepo.save(categorization);
     library.rootCategory = categorization;
     await this.libRepo.save(library);
     return await library;
   }
-
+  //Used in interceptor which takes user object from local strategy
   async findByUser(user: any) {
     const currentUser = await this.usersService.findOne(user.userId);
     console.log(user.id);
@@ -182,6 +182,11 @@ export class LibraryService {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
       (cat) => cat.id == id
     );
+    if (!category)
+      throw new LibraryException(
+        LibraryExceptionCodes.CATEGORY_NOT_FOUND,
+        `${id}`
+      );
     return await this.catRepo.findOne({
       where: { id: category.id },
       relations: {
@@ -222,12 +227,19 @@ export class LibraryService {
     const category = this.catRepo.create({ name: createCategoryDto.name });
     if (createCategoryDto.topCategory === 0) {
       category.parent = library.rootCategory;
-    } else
-      category.parent = await this.catRepo.findOne({
+    } else {
+      const parent = await this.catRepo.findOne({
         where: {
           id: createCategoryDto.topCategory,
         },
       });
+      if (!parent)
+        throw new LibraryException(
+          LibraryExceptionCodes.TOP_CATEGORY_NOT_FOUND,
+          `${createCategoryDto.topCategory}`
+        );
+      category.parent = parent;
+    }
     return await this.catRepo.save(category);
   }
 
@@ -235,14 +247,24 @@ export class LibraryService {
     const category = (await this.getCategoriesArray(library.rootCategory)).find(
       (cat) => cat.id == updateCategoryDto.id
     );
+    if (!category)
+      throw new LibraryException(
+        LibraryExceptionCodes.CATEGORY_NOT_FOUND,
+        `${updateCategoryDto.id}`
+      );
     const topCategory = updateCategoryDto.topCategory;
     if (topCategory) {
       if (topCategory === 0) {
         category.parent = library.rootCategory;
       } else {
-        category.parent = await this.catRepo.findOne({
+        const category = await this.catRepo.findOne({
           where: { id: topCategory },
         });
+        if (!category)
+          throw new LibraryException(
+            LibraryExceptionCodes.TOP_CATEGORY_NOT_FOUND,
+            `${topCategory}`
+          );
       }
     }
     const name = updateCategoryDto.name;
@@ -258,11 +280,17 @@ export class LibraryService {
   }
 
   async deleteCategory(id: number, library: Library) {
-    const categorie = (
-      await this.getCategoriesArray(library.rootCategory)
-    ).find((cat) => cat.id == id);
+    const category = (await this.getCategoriesArray(library.rootCategory)).find(
+      (cat) => cat.id == id
+    );
 
-    return await this.catRepo.remove(categorie);
+    if (!category)
+      throw new LibraryException(
+        LibraryExceptionCodes.CATEGORY_NOT_FOUND,
+        `${id}`
+      );
+
+    return await this.catRepo.remove(category);
   }
 
   //=====================================================
