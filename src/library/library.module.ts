@@ -6,9 +6,10 @@ import { Library } from "./entities/library.entity";
 import { Book } from "./entities/book.entity";
 import { Category } from "./entities/category.entity";
 import { UsersModule } from "src/users/users.module";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { LibraryInterceptor } from "./interceptors/library.interceptor";
 import { Note } from "./entities/note.entity";
+import { LibraryExceptionFilter } from "./exceptions/library-exception.filter";
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { Note } from "./entities/note.entity";
     {
       provide: APP_INTERCEPTOR,
       useClass: LibraryInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: LibraryExceptionFilter,
     },
   ],
   controllers: [LibraryController],

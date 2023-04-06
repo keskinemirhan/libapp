@@ -13,6 +13,10 @@ import { Book } from "./entities/book.entity";
 import { Category } from "./entities/category.entity";
 import { Library } from "./entities/library.entity";
 import { Note } from "./entities/note.entity";
+import {
+  LibraryException,
+  LibraryExceptionCodes,
+} from "./exceptions/library.exceptions";
 
 @Injectable()
 export class LibraryService {
@@ -79,7 +83,8 @@ export class LibraryService {
           id: cat,
         },
       });
-
+      if (!category)
+        throw new LibraryException(LibraryExceptionCodes.CATEGORY_NOT_FOUND);
       book.categories.push(category);
     }
     book.library = library;
@@ -100,6 +105,9 @@ export class LibraryService {
         id: updateBookDto.bookId,
       },
     });
+
+    if (!book) throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND);
+
     if (updateBookDto.categories) {
       const categories = [];
 
@@ -107,6 +115,8 @@ export class LibraryService {
         const category = await (
           await this.getCategoriesArray(library.rootCategory)
         ).find((cat) => cat.id === updateBookDto.categories[i]);
+        if (!category)
+          throw new LibraryException(LibraryExceptionCodes.CATEGORY_NOT_FOUND);
         categories.push(category);
       }
       book.categories = categories;
@@ -130,7 +140,7 @@ export class LibraryService {
   }
 
   async getBook(id: number, library: Library) {
-    return await this.bookRepo.findOne({
+    const book = await this.bookRepo.findOne({
       where: {
         id,
         library,
@@ -139,6 +149,8 @@ export class LibraryService {
         categories: true,
       },
     });
+    if (!book) throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND);
+    return book;
   }
 
   async deleteBook(id: number, library: Library) {
@@ -150,6 +162,8 @@ export class LibraryService {
         categories: true,
       },
     });
+    if (!deleted)
+      throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND);
     const notes = await this.noteRepo.find({
       where: {
         book: deleted,
