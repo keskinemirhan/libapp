@@ -55,7 +55,6 @@ export class LibraryService {
   //Used in interceptor which takes user object from local strategy
   async findByUser(user: any) {
     const currentUser = await this.usersService.findOne(user.userId);
-    console.log(user.id);
     const library = await this.libRepo.findOne({
       where: {
         user: currentUser,
@@ -84,7 +83,10 @@ export class LibraryService {
         },
       });
       if (!category)
-        throw new LibraryException(LibraryExceptionCodes.CATEGORY_NOT_FOUND);
+        throw new LibraryException(
+          LibraryExceptionCodes.CATEGORY_NOT_FOUND,
+          `${cat}`
+        );
       book.categories.push(category);
     }
     book.library = library;
@@ -106,7 +108,11 @@ export class LibraryService {
       },
     });
 
-    if (!book) throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND);
+    if (!book)
+      throw new LibraryException(
+        LibraryExceptionCodes.BOOK_NOT_FOUND,
+        `${updateBookDto.bookId}`
+      );
 
     if (updateBookDto.categories) {
       const categories = [];
@@ -116,7 +122,10 @@ export class LibraryService {
           await this.getCategoriesArray(library.rootCategory)
         ).find((cat) => cat.id === updateBookDto.categories[i]);
         if (!category)
-          throw new LibraryException(LibraryExceptionCodes.CATEGORY_NOT_FOUND);
+          throw new LibraryException(
+            LibraryExceptionCodes.CATEGORY_NOT_FOUND,
+            `${updateBookDto.categories[i]}`
+          );
         categories.push(category);
       }
       book.categories = categories;
@@ -149,7 +158,8 @@ export class LibraryService {
         categories: true,
       },
     });
-    if (!book) throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND);
+    if (!book)
+      throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND, `${id}`);
     return book;
   }
 
@@ -157,13 +167,14 @@ export class LibraryService {
     const deleted = await this.bookRepo.findOne({
       where: {
         id,
+        library,
       },
       relations: {
         categories: true,
       },
     });
     if (!deleted)
-      throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND);
+      throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND, `${id}`);
     const notes = await this.noteRepo.find({
       where: {
         book: deleted,
@@ -312,6 +323,11 @@ export class LibraryService {
         id: createNoteDto.bookId,
       },
     });
+    if (!book)
+      throw new LibraryException(
+        LibraryExceptionCodes.BOOK_NOT_FOUND,
+        `${createNoteDto.bookId}`
+      );
     const note = this.noteRepo.create(createNoteDto);
     note.library = library;
     note.book = book;
@@ -330,8 +346,11 @@ export class LibraryService {
     const book = await this.bookRepo.findOne({
       where: {
         id,
+        library,
       },
     });
+    if (!book)
+      throw new LibraryException(LibraryExceptionCodes.BOOK_NOT_FOUND, `${id}`);
     return await this.noteRepo.find({
       where: {
         library,
@@ -347,6 +366,8 @@ export class LibraryService {
         book: true,
       },
     });
+    if (!note)
+      throw new LibraryException(LibraryExceptionCodes.NOTE_NOT_FOUND, `${id}`);
     await this.noteRepo.remove(note);
     return note;
   }
@@ -357,6 +378,12 @@ export class LibraryService {
         id: updateNoteDto.id,
       },
     });
+    if (!note)
+      throw new LibraryException(
+        LibraryExceptionCodes.NOTE_NOT_FOUND,
+        `${updateNoteDto.id}`
+      );
+
     if (updateNoteDto.title) note.title = updateNoteDto.title;
     if (updateNoteDto.note) note.note = updateNoteDto.note;
     const savedNote = await this.noteRepo.save(note);
@@ -372,7 +399,7 @@ export class LibraryService {
   }
 
   async findNote(id: number, library: Library) {
-    return await this.noteRepo.findOne({
+    const note = await this.noteRepo.findOne({
       where: {
         id,
         library,
@@ -381,6 +408,8 @@ export class LibraryService {
         book: true,
       },
     });
+    if (!note)
+      throw new LibraryException(LibraryExceptionCodes.NOTE_NOT_FOUND, `${id}`);
   }
 
   //=====================================================
