@@ -2,7 +2,8 @@ import { HttpException, HttpStatus } from "@nestjs/common";
 
 export class LibraryException extends HttpException {
   humblibStatus: number;
-  constructor(code: number) {
+  info?: string;
+  constructor(code: number, info?: string) {
     let httpStatus: number;
     let message: string;
     switch (code) {
@@ -38,6 +39,7 @@ export class LibraryException extends HttpException {
     }
     super(message, httpStatus);
     this.humblibStatus = code;
+    this.info = info;
   }
 }
 

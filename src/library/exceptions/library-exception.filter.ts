@@ -12,10 +12,18 @@ export class LibraryExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    response.status(status).json({
-      statusCode: code,
-      detail: exception.message,
-      path: request.url,
-    });
+    if (exception.info) {
+      response.status(status).json({
+        statusCode: code,
+        info: exception.info,
+        detail: exception.message,
+        path: request.url,
+      });
+    } else
+      response.status(status).json({
+        statusCode: code,
+        detail: exception.message,
+        path: request.url,
+      });
   }
 }
