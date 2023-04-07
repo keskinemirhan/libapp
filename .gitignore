@@ -1,5 +1,13 @@
-.env.development
-.env.test
+#docker
+docker*
+Dockerfile
+
+#git
+.gitignore
+
+#env
+.env*
+
 
 #docs
 /documentation
