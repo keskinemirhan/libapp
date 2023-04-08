@@ -8,8 +8,6 @@ import { ConfigModule } from "@nestjs/config";
 import configuration from "./humblib-config/configuration";
 import { dataSourceOptions } from "./datasource";
 
-//
-
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [configuration] }),

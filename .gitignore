@@ -3,7 +3,7 @@ src/migrations/*
 src/migrations
 
 #docker
-docker*
+docker-compose-devlocal*
 Dockerfile
 .dockerignore
 
