@@ -1,6 +1,7 @@
 #docker
 docker*
 Dockerfile
+.dockerignore
 
 #git
 .gitignore

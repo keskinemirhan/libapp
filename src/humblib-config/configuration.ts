@@ -6,7 +6,7 @@ export default () => {
         return {
           port: parseInt(process.env.PORT, 10) || 3000,
           database: {
-            database: process.env.DATABASE_NAME || "db.sqlite",
+            database: process.env.DATABASE_NAME || "db/db.sqlite",
             type: "sqlite",
             synchronize: process.env.SYNCHRONIZE || true,
           },
