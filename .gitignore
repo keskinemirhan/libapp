@@ -1,3 +1,7 @@
+#migrations
+src/migrations/*
+src/migrations
+
 #docker
 docker*
 Dockerfile
