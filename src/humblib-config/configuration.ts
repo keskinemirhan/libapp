@@ -24,7 +24,17 @@ export default () => {
           },
         };
       case "prod":
-        return;
+        return {
+          port: parseInt(process.env.PORT, 10) || 3000,
+          database: {
+            database: "humblib",
+            type: "postgres",
+            host: process.env.DATABASE_HOST || "localhost",
+            port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
+            username: process.env.DATABASE_USER || "humblib",
+            password: process.env.DATABASE_PASS || "humblib",
+          },
+        };
     }
   } else {
     return {

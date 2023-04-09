@@ -1,0 +1,29 @@
+version: "3.9"
+name: humblib-prod
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+      args:
+        ports: 3000
+    environment:
+      - RUN_ENV=prod
+      - DATABASE_HOST=db-prod
+    ports:
+      - "3000:3000"
+    links:
+      - db-prod
+  db-prod:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=humblib
+      - POSTGRES_PASSWORD=humblib
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local

@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./
+      args:
+        ports: 3000
+    environment:
+      - RUN_ENV=devlocal
+    volumes:
+      - humblib-sqlite:/app/db
+    ports:
+      - "3000:3000"
+volumes:
+  humblib-sqlite:
+    external: true

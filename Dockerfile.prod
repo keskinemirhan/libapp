@@ -1,0 +1,21 @@
+FROM node:18.15-alpine3.17
+
+ARG port
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+#RUN npm run typeorm:mg ./src/migrations/migration
+
+#RUN npm run typeorm:r
+
+CMD [ "node", "dist/main.js" ]
+
+EXPOSE ${port}
