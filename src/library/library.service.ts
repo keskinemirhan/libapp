@@ -410,6 +410,7 @@ export class LibraryService {
     });
     if (!note)
       throw new LibraryException(LibraryExceptionCodes.NOTE_NOT_FOUND, `${id}`);
+    return note;
   }
 
   //=====================================================

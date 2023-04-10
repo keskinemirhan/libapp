@@ -123,7 +123,7 @@ export class LibraryController {
   }
 
   @Get("notes/:id")
-  async findNote(@Param("id") id: number, @Req() req: any) {
+  async findNote(@Param("id") id: number, @Request() req: any) {
     return await this.libraryService.findNote(id, req.user.library);
   }
 
