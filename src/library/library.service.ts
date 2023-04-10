@@ -218,8 +218,9 @@ export class LibraryService {
     const descendants = await this.catTreeRepo.findDescendants(root, {
       relations: ["parent"],
     });
-    descendants.shift();
+    descendants.splice(descendants.indexOf(root), 1);
     let result = [];
+
     if (descendants.length > 0) {
       for (const descendant of descendants) {
         result = descendants.concat(await this.getCategoriesArray(descendant));
