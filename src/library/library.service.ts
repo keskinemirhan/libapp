@@ -226,7 +226,6 @@ export class LibraryService {
       }
     }
     let result = [];
-    console.log(descendants);
     if (descendants.length > 0) {
       for (const descendant of descendants) {
         result = descendants.concat(await this.getCategoriesArray(descendant));
