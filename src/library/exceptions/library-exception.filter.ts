@@ -21,7 +21,7 @@ export class LibraryExceptionFilter implements ExceptionFilter {
       });
     } else
       response.status(status).json({
-        statusCode: code,
+        statusCode: String(code), // as string
         detail: exception.message,
         path: request.url,
       });

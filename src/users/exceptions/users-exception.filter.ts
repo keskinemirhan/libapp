@@ -18,7 +18,7 @@ export class UserExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     response.status(status).json({
-      statusCode: code,
+      statusCode: String(code),
       detail: exception.message,
       path: request.url,
     });
