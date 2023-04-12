@@ -14,10 +14,10 @@ export class Note {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: "string", length: 256 })
   title: string;
 
-  @Column()
+  @Column({ type: "string", length: 1500 })
   note: string;
 
   @ManyToOne(() => Book, (book) => book.notes, {
