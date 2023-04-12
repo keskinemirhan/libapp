@@ -19,6 +19,7 @@ import {
   UserException,
   UserExceptionCodes,
 } from "./exceptions/user.exceptions";
+import { User } from "./entities/user.entity";
 
 @Controller("users")
 export class UsersController {
@@ -33,8 +34,15 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    const users = await this.usersService.findAll();
+    return users.map((user: User) => {
+      return {
+        email: user.email,
+        username: user.username,
+        library: user.library,
+      };
+    });
   }
 
   @UseGuards(AuthGuard("local"))
@@ -45,27 +53,36 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get("profile")
-  getProfile(@Request() req: any) {
-    return this.usersService.findOne(req.user.userId);
+  async getProfile(@Request() req: any) {
+    const { password, id, ...result } = await this.usersService.findOne(
+      req.user.userId
+    );
+    return result;
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param("id") userid: string) {
+    const { password, id, ...result } = await this.usersService.findOne(
+      +userid
+    );
+    return result;
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(
+    @Param("id") userid: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    const { password, id, ...result } = await this.usersService.update(
+      +userid,
+      updateUserDto
+    );
+    return result;
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.usersService.remove(+id);
-  }
-
-  @Get("error/error")
-  exceptionTest() {
-    throw new UserException(UserExceptionCodes.EMAIL_IN_USE);
+  async remove(@Param("id") userid: string) {
+    const { password, id, ...result } = await this.usersService.remove(+userid);
+    return result;
   }
 }

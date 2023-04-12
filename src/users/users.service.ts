@@ -50,7 +50,7 @@ export class UsersService {
     const user = this.repo.create(createUserDto);
     await this.repo.save(user);
     user.library = await this.libraryService.createLibrary(user.id);
-    return this.findOne(user.id);
+    return;
   }
 
   findAll() {
