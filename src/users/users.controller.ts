@@ -15,10 +15,6 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { JwtAuthGuard } from "./jwt.guard";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "@nestjs/passport";
-import {
-  UserException,
-  UserExceptionCodes,
-} from "./exceptions/user.exceptions";
 import { User } from "./entities/user.entity";
 
 @Controller("users")
@@ -30,7 +26,7 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.authService.signup(createUserDto);
   }
 
   @Get()
