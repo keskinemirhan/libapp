@@ -16,7 +16,7 @@ export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "string", length: 256 })
+  @Column({ type: "varchar", length: 256 })
   name: string;
 
   @ManyToOne(() => Library, (library) => library.books)

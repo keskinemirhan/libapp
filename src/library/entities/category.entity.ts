@@ -16,7 +16,7 @@ export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "string", length: 128 })
+  @Column({ type: "varchar", length: 128 })
   name: string;
 
   @TreeParent()
