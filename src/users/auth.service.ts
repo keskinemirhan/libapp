@@ -6,6 +6,7 @@ import {
   UserException,
   UserExceptionCodes,
 } from "./exceptions/user.exceptions";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
   }
   async validateUser(email: string, password: string) {
     const [user] = await this.usersService.find({ email });
-    if (user && user.password === password) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result;
     }
@@ -30,13 +31,20 @@ export class AuthService {
   }
 
   async signup(createUserDto: CreateUserDto) {
-    if (await this.usersService.find({ email: createUserDto.email })) {
+    if ((await this.usersService.find({ email: createUserDto.email })).at(0)) {
       throw new UserException(UserExceptionCodes.EMAIL_IN_USE);
     }
-    if (await this.usersService.find({ username: createUserDto.username })) {
+    if (
+      (await this.usersService.find({ username: createUserDto.username })).at(0)
+    ) {
       throw new UserException(UserExceptionCodes.USERNAME_IN_USE);
     }
+
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    createUserDto.password = hashedPassword;
+    console.log(hashedPassword);
+
     const user = await this.usersService.create(createUserDto);
-    return user.id;
+    return;
   }
 }
