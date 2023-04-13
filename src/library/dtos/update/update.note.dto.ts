@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MaxLength } from "class-validator";
+import { IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 
 export class UpdateNoteDto {
   @IsNumber()
@@ -6,6 +6,7 @@ export class UpdateNoteDto {
 
   @IsString()
   @MaxLength(256)
+  @MinLength(1)
   title: string;
 
   @IsString()
