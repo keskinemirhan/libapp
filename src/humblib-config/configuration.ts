@@ -23,19 +23,20 @@ export default () => {
             password: process.env.DATABASE_PASS || "humblib",
           },
         };
-      case "prod":
+      case "production":
         return {
           port: parseInt(process.env.PORT, 10) || 3000,
           database: {
-            type: "postgres",
-            url: process.env.DATABASE_URL,
-            migrationsRun: true,
-            entities: ["./dist/**/*.entity.js"],
-            ssl: {
-              rejectUnauthorized: false,
-            },
+            database: process.env.DATABASE_NAME,
+            type: process.env.DATABASE_TYPE,
+            host: process.env.DATABASE_HOST || undefined,
+            port: parseInt(process.env.DATABASE_PORT, 10) || undefined,
+            username: process.env.DATABASE_USER || undefined,
+            password: process.env.DATABASE_PASS || undefined,
+            synchronize: process.env.SYNCHRONIZE || false,
           },
         };
+        break;
     }
   } else {
     return {
