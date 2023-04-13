@@ -27,12 +27,13 @@ export default () => {
         return {
           port: parseInt(process.env.PORT, 10) || 3000,
           database: {
-            database: "humblib",
             type: "postgres",
-            host: process.env.DATABASE_HOST || "localhost",
-            port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
-            username: process.env.DATABASE_USER || "humblib",
-            password: process.env.DATABASE_PASS || "humblib",
+            url: process.env.DATABASE_URL,
+            migrationsRun: true,
+            entities: ["./dist/**/*.entity.js"],
+            ssl: {
+              rejectUnauthorized: false,
+            },
           },
         };
     }
