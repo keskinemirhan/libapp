@@ -1,0 +1,37 @@
+# Runtime Environment -> devlocal, dev, production or none
+RUN_ENV = devlocal 
+
+# Port (numerical) 
+# Default value is 3000 if not specified
+PORT = 3000
+
+# Database name -> any string
+# Set to 'db/db.sqlite' If RUN_ENV = devlocal 
+# Set to 'humblib' If RUN_ENV = dev
+# For above scenarios no need to set 
+DATABASE_NAME = humblibdb
+
+# Database type ->  must be supported by TypeORM
+# set to sqlite if runtime env is devlocal
+# Set to postgres if runtime env is dev 
+DATABASE_TYPE = sqlite
+
+# Database host name -> any string
+# set to localhost if runtime env is dev
+DATABASE_HOST = localhost
+
+# Database port -> numerical
+# Set to 5432 if runtime env is dev
+DATABASE_PORT = 54321
+
+# Database user -> any string
+# Set to humblib if runtime env is dev
+DATABASE_USER = humblib
+
+# Database password -> any string
+# Set to humblib if runtime env is dev
+DATABASE_PASS = humblib
+
+
+
+
