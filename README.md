@@ -1,1 +1,5 @@
-Simple and Humble Personal Library Applicatio
+# Simple Library App - Backend
+
+Personal library management application.
+
+
